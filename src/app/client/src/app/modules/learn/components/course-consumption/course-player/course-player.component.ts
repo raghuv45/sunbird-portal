@@ -1,6 +1,6 @@
 import { combineLatest, Subscription, Subject } from 'rxjs';
 import { takeUntil, first, mergeMap, map } from 'rxjs/operators';
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import {
   ContentService, UserService, BreadcrumbsService, PermissionService, CoursesService
 } from '@sunbird/core';
@@ -10,7 +10,7 @@ import {
   WindowScrollService, ILoaderMessage, ConfigService, ICollectionTreeOptions, NavigationHelperService,
   ToasterService, ResourceService, ExternalUrlPreviewService
 } from '@sunbird/shared';
-import { CourseConsumptionService, CourseBatchService } from './../../../services';
+import { CourseConsumptionService, CourseBatchService, CourseProgressService } from './../../../services';
 import { INoteData } from '@sunbird/notes';
 import {
   IImpressionEventInput, IEndEventInput, IStartEventInput, IInteractEventObject, IInteractEventEdata
@@ -21,7 +21,7 @@ import {
   templateUrl: './course-player.component.html',
   styleUrls: ['./course-player.component.css']
 })
-export class CoursePlayerComponent implements OnInit, OnDestroy {
+export class CoursePlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public courseInteractObject: IInteractEventObject;
 
@@ -102,6 +102,8 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
 
   contentIds = [];
 
+  courseProgressData: any;
+
   contentStatus: any;
 
   contentDetails = [];
@@ -134,7 +136,8 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
     router: Router, public navigationHelperService: NavigationHelperService, private userService: UserService,
     private toasterService: ToasterService, private resourceService: ResourceService, public breadcrumbsService: BreadcrumbsService,
     private cdr: ChangeDetectorRef, public courseBatchService: CourseBatchService, public permissionService: PermissionService,
-    public externalUrlPreviewService: ExternalUrlPreviewService, public coursesService: CoursesService) {
+    public externalUrlPreviewService: ExternalUrlPreviewService, public coursesService: CoursesService,
+    private courseProgressService: CourseProgressService) {
     this.contentService = contentService;
     this.activatedRoute = activatedRoute;
     this.windowScrollService = windowScrollService;
@@ -159,6 +162,7 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
             .pipe(map((courseHierarchy) => ({ courseHierarchy })));
         }
       })).subscribe((response: any) => {
+        console.log('query params subscribe');
         this.courseHierarchy = response.courseHierarchy;
         this.courseInteractObject = {
           id: this.courseHierarchy.identifier,
@@ -191,6 +195,16 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
         this.toasterService.error(this.resourceService.messages.emsg.m0005); // need to change message
       });
   }
+
+  ngAfterViewInit() {
+    this.courseProgressService.courseProgressData.pipe(
+      takeUntil(this.unsubscribe))
+      .subscribe((courseProgressData) => {
+        this.courseProgressData = courseProgressData;
+        console.log('this.courseProgressData', this.courseProgressData);
+      });
+  }
+
   private parseChildContent() {
     const model = new TreeModel();
     const mimeTypeCount = {};
@@ -227,6 +241,8 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
   }
   private subscribeToQueryParam() {
     this.queryParamSubscription = this.activatedRoute.queryParams.subscribe((queryParams) => {
+      console.log('sunsiebv to query param2', this.contentId);
+      this.checkForContentH5PForProgressUpdate();
       if (queryParams.contentId) {
         const content = this.findContentById(queryParams.contentId);
         const isExtContentMsg = this.coursesService.showExtContentMsg ? this.coursesService.showExtContentMsg : false;
@@ -267,6 +283,7 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
     this.nextPlaylistItem = this.contentDetails[index + 1];
   }
   private playContent(data: any, showExtContentMsg?: boolean): void {
+    console.log('playcontent', data);
     this.enableContentPlayer = false;
     this.loader = true;
     const options: any = { courseId: this.courseId };
@@ -302,6 +319,7 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
       relativeTo: this.activatedRoute
     };
     const playContentDetail = this.findContentById(content.id);
+    console.log('playContentDetailplayContentDetail', playContentDetail);
     if (playContentDetail.model.mimeType === this.configService.appConfig.PLAYER_CONFIG.MIME_TYPE.xUrl) {
       this.showExtContentMsg = false;
       this.istrustedClickXurl = true;
@@ -313,7 +331,35 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
       this.router.navigate([], navigationExtras);
     }
   }
+
+  public checkForContentH5PForProgressUpdate () {
+    if (this.contentId) {
+      const playContentDetail = this.findContentById(this.contentId);
+      console.log('playContentDetail', playContentDetail);
+      const index = _.findIndex(this.courseProgressData.content, { 'contentId': this.contentId });
+      console.log('this.courseProgressData.content[index].status', this.courseProgressData.content[index].status);
+      if (index !== -1 && this.courseProgressData.content[index].status === 1 &&
+        playContentDetail.model.mimeType === 'application/vnd.ekstep.h5p-archive') {
+        const request: any = {
+          userId: this.userService.userid,
+          contentId: this.contentId,
+          courseId: this.courseId,
+          batchId: this.batchId,
+          status: 2
+        };
+        console.log('requestrequest', request);
+        this.updateContentsStateSubscription = this.courseConsumptionService.updateContentsState(request)
+          .subscribe((updatedRes) => {
+            console.log('updated h5p content status to 2');
+          }, (err) => {
+            console.log('updating content status failed', err);
+          });
+      }
+    }
+  }
+
   public contentProgressEvent(event) {
+    console.log('event', event);
     if (this.batchId && this.enrolledBatchInfo && this.enrolledBatchInfo.status === 1) {
       const eid = event.detail.telemetryData.eid;
       const request: any = {
@@ -345,6 +391,9 @@ export class CoursePlayerComponent implements OnInit, OnDestroy {
     this.createNoteData = data;
   }
   ngOnDestroy() {
+    if (this.contentId) {
+      this.checkForContentH5PForProgressUpdate();
+    }
     if (this.activatedRouteSubscription) {
       this.activatedRouteSubscription.unsubscribe();
     }
