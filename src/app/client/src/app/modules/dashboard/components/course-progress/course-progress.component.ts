@@ -151,7 +151,8 @@ export class CourseProgressComponent implements OnInit, OnDestroy {
     const option = {
       courseId: this.courseId,
       status: ['0', '1', '2'],
-      createdBy: this.userId
+      // createdBy: this.userId,
+      mentors : [this.userId]
     };
     this.courseProgressService.getBatches(option).pipe(
     takeUntil(this.unsubscribe))

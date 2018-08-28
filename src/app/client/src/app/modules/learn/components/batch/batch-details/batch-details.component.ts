@@ -91,7 +91,8 @@ export class BatchDetailsComponent implements OnInit, OnDestroy {
       sort_by: { createdDate: 'desc' }
     };
     if (this.courseMentor) {
-      searchParams.filters.createdBy = this.userService.userid;
+      searchParams.filters.mentors = [this.userService.userid];
+      // searchParams.filters.createdBy = this.userService.userid;
     } else {
       searchParams.filters.enrollmentType = 'open';
     }
