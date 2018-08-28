@@ -198,6 +198,7 @@ export class CreateBatchComponent implements OnInit, OnDestroy {
     if (this.createBatchForm.value.enrollmentType !== 'open') {
       participants = $('#participants').dropdown('get value') ? $('#participants').dropdown('get value').split(',') : [];
       mentors = $('#mentors').dropdown('get value') ? $('#mentors').dropdown('get value').split(',') : [];
+      mentors.push(this.userService.userid)
     }
     const startDate = moment(this.createBatchForm.value.startDate).format('YYYY-MM-DD');
     const endDate = this.createBatchForm.value.endDate && moment(this.createBatchForm.value.endDate).format('YYYY-MM-DD');

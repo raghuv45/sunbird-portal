@@ -206,6 +206,7 @@ export class UpdateCourseBatchComponent implements OnInit, OnDestroy {
     const users = this.sortUsers(res);
     const participantList = users.participantList;
     const mentorList = users.mentorList;
+    console.log("users.mentorList",users.mentorList)
     _.forEach(this.batchDetails.participant, (value, key) => {
       const user = _.find(participantList, ['id', key]);
       if (user) {
@@ -220,8 +221,10 @@ export class UpdateCourseBatchComponent implements OnInit, OnDestroy {
     });
     this.selectedParticipants = _.uniqBy(this.selectedParticipants, 'id');
     this.selectedMentors = _.uniqBy(this.selectedMentors, 'id');
+    console.log("selectedMentors",this.selectedMentors)
   }
   private sortUsers(res) {
+    console.log("resresres",res)
     const participantList = [];
     const mentorList = [];
     if (res.result.response.content && res.result.response.content.length > 0) {
@@ -233,9 +236,12 @@ export class UpdateCourseBatchComponent implements OnInit, OnDestroy {
             avatar: userData.avatar,
             otherDetail: this.getUserOtherDetail(userData)
           };
+          console.log("userData.organisations",userData.organisations)
           _.forEach(userData.organisations, (userOrgData) => {
             if (_.indexOf(userOrgData.roles, 'COURSE_MENTOR') !== -1) {
               mentorList.push(user);
+            }else{
+              console.log("coming in else", userOrgData.roles)
             }
           });
           participantList.push(user);
@@ -310,6 +316,7 @@ export class UpdateCourseBatchComponent implements OnInit, OnDestroy {
     if (this.batchUpdateForm.value.enrollmentType !== 'open') {
       participants = $('#participant').dropdown('get value') ? $('#participant').dropdown('get value').split(',') : [];
       mentors = $('#mentors').dropdown('get value') ? $('#mentors').dropdown('get value').split(',') : [];
+      mentors.push(this.userService.userid);
     }
     const startDate = moment(this.batchUpdateForm.value.startDate).format('YYYY-MM-DD');
     const endDate = this.batchUpdateForm.value.endDate && moment(this.batchUpdateForm.value.endDate).format('YYYY-MM-DD');

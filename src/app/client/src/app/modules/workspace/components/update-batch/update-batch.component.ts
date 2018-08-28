@@ -294,6 +294,7 @@ export class UpdateBatchComponent implements OnInit, OnDestroy {
     if (this.batchUpdateForm.value.enrollmentType !== 'open') {
       participants = $('#participant').dropdown('get value') ? $('#participant').dropdown('get value').split(',') : [];
       mentors = $('#mentors').dropdown('get value') ? $('#mentors').dropdown('get value').split(',') : [];
+      mentors.push(this.userService.userid)
     }
     const startDate = moment(this.batchUpdateForm.value.startDate).format('YYYY-MM-DD');
     const endDate = this.batchUpdateForm.value.endDate && moment(this.batchUpdateForm.value.endDate).format('YYYY-MM-DD');
