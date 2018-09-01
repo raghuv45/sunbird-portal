@@ -22,6 +22,8 @@ export class UpdateBatchComponent implements OnInit, OnDestroy {
   */
   private batchId: string;
 
+  public showFormInViewMode: boolean;
+
   public showUpdateModal = false;
 
   public disableSubmitBtn = false;
@@ -162,6 +164,10 @@ export class UpdateBatchComponent implements OnInit, OnDestroy {
         this.disableSubmitBtn = true;
       }
     });
+    if (((this.batchDetails.createdBy !== this.userService.userid) || this.batchDetails.status === 2) {
+      this.showFormInViewMode = true;
+      this.batchUpdateForm.disable();
+    }
   }
   /**
   * fetch mentors and participant details

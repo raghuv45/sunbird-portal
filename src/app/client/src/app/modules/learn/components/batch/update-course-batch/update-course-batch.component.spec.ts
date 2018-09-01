@@ -116,6 +116,24 @@ describe('UpdateCourseBatchComponent', () => {
     expect(toasterService.error).toHaveBeenCalledWith('error');
     expect(component.router.navigate).toHaveBeenCalledWith(['./'], {relativeTo: activatedRoute.parent});
   });
+  it('update batch form should be disabled if loggedin user is not creator of the batch', () => {
+    const courseBatchService = TestBed.get(CourseBatchService);
+    const courseConsumptionService = TestBed.get(CourseConsumptionService);
+    const userService = TestBed.get(UserService);
+    userService._userid = 'b2479136-8608-41c0-b3b1-283f38c338d';
+    spyOn(courseBatchService, 'getUserList').and.callFake((request) => {
+      if (request) {
+        return observableOf(getUserDetails);
+      } else {
+        return observableOf(getUserList);
+      }
+    });
+    spyOn(courseBatchService, 'getUpdateBatchDetails').and.returnValue(observableOf(updateBatchDetails));
+    spyOn(courseConsumptionService, 'getCourseHierarchy').and.
+    returnValue(observableOf({createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed'}));
+    fixture.detectChanges();
+    expect(component.showFormInViewMode).toBe(true);
+  });
   it('should navigate to parent page if fetching user details fails', () => {
     const courseBatchService = TestBed.get(CourseBatchService);
     const courseConsumptionService = TestBed.get(CourseConsumptionService);

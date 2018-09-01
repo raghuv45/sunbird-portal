@@ -29,6 +29,8 @@ export class UpdateCourseBatchComponent implements OnInit, OnDestroy {
 
   private courseId: string;
 
+  public showFormInViewMode: boolean;
+
   public selectedParticipants: any = [];
 
   public selectedMentors: any = [];
@@ -178,6 +180,10 @@ export class UpdateCourseBatchComponent implements OnInit, OnDestroy {
         this.disableSubmitBtn = true;
       }
     });
+    if (this.batchDetails.createdBy !== this.userService.userid) {
+      this.showFormInViewMode = true;
+      this.batchUpdateForm.disable();
+    }
   }
   /**
   * fetch mentors and participant details
