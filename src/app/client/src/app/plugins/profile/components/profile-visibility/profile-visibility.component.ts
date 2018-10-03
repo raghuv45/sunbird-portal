@@ -39,7 +39,11 @@ export class ProfileVisibilityComponent implements OnInit {
       (user: IUserData) => {
         if (user && !user.err) {
           this.userProfile = this.userService.userProfile;
-          this.visibility = this.userProfile.profileVisibility[this.field] ? 'private' : 'public';
+          this.visibility = 'public';
+          if (this.field && this.userProfile.profileVisibility[this.field] &&
+              this.userProfile.profileVisibility[this.field] === 'private') {
+            this.visibility = 'private';
+          }
         }
       });
     this.userProfile = this.userService.userProfile;
