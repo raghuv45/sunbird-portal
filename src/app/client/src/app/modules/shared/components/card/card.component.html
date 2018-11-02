@@ -31,7 +31,7 @@
           {{data.name | slice:0:40 }}
           <span *ngIf="data.name && data.name.length >= 40">...</span>
         </h4>
-        <div class="creator ellipsis">
+        <div class="creator ellipsis" *ngIf="data.creator">
           {{data.creator}}
         </div>
     </div>
