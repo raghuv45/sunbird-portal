@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { CoursesService, UserService, PlayerService } from '@sunbird/core';
@@ -17,7 +17,7 @@ import * as _ from 'lodash';
   styleUrls: ['./main-home.component.scss']
 })
 
-export class MainHomeComponent implements OnInit, OnDestroy {
+export class MainHomeComponent implements OnInit, AfterViewChecked, OnDestroy {
   /**
   * inviewLogs
  */
@@ -64,6 +64,12 @@ export class MainHomeComponent implements OnInit, OnDestroy {
    * Contains details of userprofile and enrolled courses.
    */
   toDoList: Array<object> = [];
+
+  currentSlideIndex = 0;
+
+  loadEnrolledCourseUi = false;
+
+  toDoListLoaded: Array<object> = [];
   /**
   * Contains config service reference
   */
@@ -81,75 +87,86 @@ export class MainHomeComponent implements OnInit, OnDestroy {
   slideConfig = {
     'slidesToShow': 4,
     'slidesToScroll': 4,
+    'lazyLoad': 'ondemand',
     'responsive': [
       {
         'breakpoint': 2800,
         'settings': {
           'slidesToShow': 6,
-          'slidesToScroll': 6
+          'slidesToScroll': 6,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 2200,
         'settings': {
           'slidesToShow': 5,
-          'slidesToScroll': 5
+          'slidesToScroll': 5,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 2000,
         'settings': {
           'slidesToShow': 4,
-          'slidesToScroll': 4
+          'slidesToScroll': 4,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 1600,
         'settings': {
           'slidesToShow': 3.5,
-          'slidesToScroll': 3
+          'slidesToScroll': 3,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 1200,
         'settings': {
           'slidesToShow': 3,
-          'slidesToScroll': 3
+          'slidesToScroll': 3,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 900,
         'settings': {
           'slidesToShow': 2.5,
-          'slidesToScroll': 2
+          'slidesToScroll': 2,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 750,
         'settings': {
           'slidesToShow': 2,
-          'slidesToScroll': 2
+          'slidesToScroll': 2,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 660,
         'settings': {
           'slidesToShow': 1.75,
-          'slidesToScroll': 1
+          'slidesToScroll': 1,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 530,
         'settings': {
           'slidesToShow': 1.25,
-          'slidesToScroll': 1
+          'slidesToScroll': 1,
+          'lazyLoad': 'ondemand'
         }
       },
       {
         'breakpoint': 450,
         'settings': {
           'slidesToShow': 1,
-          'slidesToScroll': 1
+          'slidesToScroll': 1,
+          'lazyLoad': 'ondemand'
         }
       }
     ],
@@ -178,6 +195,11 @@ export class MainHomeComponent implements OnInit, OnDestroy {
     this.utilService = utilService;
     this.btnArrow = 'prev-button';
   }
+
+  ngAfterViewChecked () {
+    this.loadEnrolledCourseUi = true;
+  }
+
   /**
    * This method calls the course API.
    */
@@ -195,6 +217,8 @@ export class MainHomeComponent implements OnInit, OnDestroy {
           const courses = this.utilService.getDataForCard(data.enrolledCourses,
             constantData, dynamicFields, metaData);
           this.toDoList = this.toDoList.concat(courses);
+          // this.toDoListLoaded = this.toDoList.slice(0,(this.slideConfig.slidesToShow*2));
+          this.toDoListLoaded = this.toDoList.slice(0, (this.slideConfig.slidesToShow * 2));
         } else if (data && data.err) {
           this.showLoader = false;
           this.toasterService.error(this.resourceService.messages.fmsg.m0001);
@@ -298,9 +322,27 @@ export class MainHomeComponent implements OnInit, OnDestroy {
     this.telemetryImpression = Object.assign({}, this.telemetryImpression);
   }
   checkSlide(event) {
+    // console.log("inchange")
     if (event.currentSlide === 0 && event.nextSlide === 0) {
       this.btnArrow = 'prev-button';
     } else if (event.currentSlide < event.nextSlide) {
+      // console.log("next clicked")
+      const additionalDataToLoad = this.toDoList.slice(this.toDoListLoaded.length, this.toDoListLoaded.length + 10 );
+      // console.log("additionalDataToLoadadditionalDataToLoad",additionalDataToLoad)
+      _.forEach(additionalDataToLoad, (slide, key) => {
+        this.toDoListLoaded.push(slide);
+      });
+      this.inviewChange(this.toDoListLoaded, event);
+      // this.toDoListLoaded = _.merge(this.toDoListLoaded,additionalDataToLoad)
+      // this.toDoListLoaded.concat(additionalDataToLoad)
+      // console.log("fulll-----",this.toDoListLoaded.length)
+      // console.log("eventevent",event)
+      // if(event.nextSlide <= this.toDoListLoaded.length){
+        // console.log("sdfdsfsd",this.toDoList.slice(this.toDoListLoaded.length,this.toDoListLoaded.length+10))
+        // this.toDoListLoaded = _.merge(this.toDoListLoaded,this.toDoList.slice(event.nextSlide,event.nextSlide+10))
+        // console.log("--rrr---",this.toDoListLoaded.length)
+        // console.log("this.toDoListthis.toDoList",this.toDoList.length)
+      // }
       this.btnArrow = 'next-button';
     } else if (event.currentSlide > event.nextSlide) {
       this.btnArrow = 'prev-button';

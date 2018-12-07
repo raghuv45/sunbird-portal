@@ -29,6 +29,7 @@ export class CourseConsumptionPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log("super cmng here")
     this.subscription = combineLatest(this.activatedRoute.params, this.activatedRoute.firstChild.params)
       .pipe(map((result) => ({ ...result[0], ...result[1] })),
         mergeMap((params) => {
