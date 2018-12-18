@@ -112,7 +112,7 @@ export class AppComponent implements OnInit {
    */
   public checkTncAndFrameWorkSelected () {
     if ( _.has(this.userProfile, 'promptTnC') &&  _.has(this.userProfile, 'tncLatestVersion') &&
-      _.has(this.userProfile, 'tncLatestVersion')  &&  this.userProfile.promptTnC  === true) {
+      _.has(this.userProfile, 'tncLatestVersionUrl')  &&  this.userProfile.promptTnC  === true) {
       this.showTermsAndCondPopUp = true;
     } else {
       this.checkFrameworkSelected();
