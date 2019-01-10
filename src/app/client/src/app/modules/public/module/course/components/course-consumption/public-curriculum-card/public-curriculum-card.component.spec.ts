@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CurriculumCardComponent } from './curriculum-card.component';
+import { PublicCurriculumCardComponent } from './public-curriculum-card.component';
 import {SharedModule} from '@sunbird/shared';
 import {CoreModule} from '@sunbird/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-describe('CurriculumCardComponent', () => {
-  let component: CurriculumCardComponent;
-  let fixture: ComponentFixture<CurriculumCardComponent>;
+describe('PublicCurriculumCardComponent', () => {
+  let component: PublicCurriculumCardComponent;
+  let fixture: ComponentFixture<PublicCurriculumCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, SharedModule.forRoot(), CoreModule.forRoot()],
-      declarations: [ CurriculumCardComponent ]
+      declarations: [ PublicCurriculumCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CurriculumCardComponent);
+    fixture = TestBed.createComponent(PublicCurriculumCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
