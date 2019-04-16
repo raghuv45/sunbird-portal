@@ -56,7 +56,6 @@ describe('InboxComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(InboxComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     it('should call inbox api and get success response', inject([AnnouncementService], (announcementService) => {
@@ -105,17 +104,17 @@ describe('InboxComponent', () => {
                     expect(component.showLoader).toBe(false);
                 }
             );
-            fixture.detectChanges();
+            component.ngOnInit();
             expect(component.pageNumber).toBe(component.pageNumber);
             expect(component.pageLimit).toBe(configService.appConfig.ANNOUNCEMENT.INBOX.PAGE_LIMIT);
         }));
 
     it('should call setpage method and set proper page number', inject([ConfigService, Router],
         (configService, route) => {
+            component.ngOnInit();
             component.pager = testData.mockRes.pager;
             component.pager.totalPages = 10;
             component.navigateToPage(3);
-            fixture.detectChanges();
             expect(component.pageNumber).toEqual(3);
             expect(component.pageLimit).toEqual(configService.appConfig.ANNOUNCEMENT.INBOX.PAGE_LIMIT);
             expect(route.navigate).toHaveBeenCalledWith(['announcement/inbox', component.pageNumber]);
@@ -123,10 +122,10 @@ describe('InboxComponent', () => {
 
     it('should call setpage method and page number should be default, i,e 1', inject([ConfigService, Router],
         (configService, route) => {
+            component.ngOnInit();
             component.pager = testData.mockRes.pager;
             component.pager.totalPages = 0;
             component.navigateToPage(3);
-            fixture.detectChanges();
             expect(component.pageNumber).toEqual(1);
             expect(component.pageLimit).toEqual(configService.appConfig.ANNOUNCEMENT.INBOX.PAGE_LIMIT);
         }));
@@ -140,7 +139,7 @@ describe('InboxComponent', () => {
             announcementService.readAnnouncement().subscribe(
                 receivedResponse => { }
             );
-            fixture.detectChanges();
+            component.ngOnInit();
             expect(component.pageNumber).toBe(1);
             expect(component.pageLimit).toBe(configService.appConfig.ANNOUNCEMENT.INBOX.PAGE_LIMIT);
             expect(component.inboxData.count).toBe(1173);

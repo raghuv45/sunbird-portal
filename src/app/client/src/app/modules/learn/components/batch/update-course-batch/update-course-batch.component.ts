@@ -432,7 +432,6 @@ export class UpdateCourseBatchComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngAfterViewInit () {
-    setTimeout(() => {
       this.telemetryImpression = {
         context: {
           env: this.activatedRoute.snapshot.data.telemetry.env
@@ -453,7 +452,6 @@ export class UpdateCourseBatchComponent implements OnInit, OnDestroy, AfterViewI
           }
         }
       };
-    });
   }
   ngOnDestroy() {
     if (this.updateBatchModal && this.updateBatchModal.deny) {

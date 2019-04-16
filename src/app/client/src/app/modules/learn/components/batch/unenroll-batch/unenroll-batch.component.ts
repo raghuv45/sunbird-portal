@@ -111,7 +111,7 @@ export class UnEnrollBatchComponent implements OnInit, OnDestroy, AfterViewInit 
     }, 2000);
   }
   ngAfterViewInit () {
-    setTimeout(() => {
+    // setTimeout(() => {
       this.telemetryImpression = {
         context: {
           env: this.activatedRoute.snapshot.data.telemetry.env
@@ -128,7 +128,7 @@ export class UnEnrollBatchComponent implements OnInit, OnDestroy, AfterViewInit 
           ver: this.activatedRoute.snapshot.data.telemetry.object.ver
         }
       };
-    });
+    // });
   }
   setTelemetryData() {
     this.telemetryCdata = [{ 'type': 'batch', 'id': this.batchDetails.identifier}];

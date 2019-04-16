@@ -74,14 +74,14 @@ describe('DialCodeComponent', () => {
     const searchService = TestBed.get(SearchService);
     spyOn(searchService, 'contentSearch').and.callFake(() => observableOf(Response.successData));
     component.searchDialCode();
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(component.showLoader).toBeTruthy();
   });
   it('should return appropriate message on no contents', () => {
     const searchService = TestBed.get(SearchService);
     spyOn(searchService, 'contentSearch').and.callFake(() => observableOf(Response.noData));
     component.searchDialCode();
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(component.showLoader).toBeFalsy();
     expect(component.searchResults).toEqual([]);
   });
@@ -89,7 +89,7 @@ describe('DialCodeComponent', () => {
     const searchService = TestBed.get(SearchService);
     spyOn(searchService, 'contentSearch').and.callFake(() => observableThrowError(new Error('Server error')));
     component.searchDialCode();
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(component.showLoader).toBeFalsy();
     expect(component.searchResults).toEqual([]);
   });
@@ -97,7 +97,7 @@ describe('DialCodeComponent', () => {
     const route = TestBed.get(Router);
     component.searchKeyword = '61U24C';
     component.navigateToSearch();
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(route.navigate).toHaveBeenCalledWith(['/get/dial', component.searchKeyword]);
   });
   it('should navigate to content player page for resource content types', () => {
@@ -106,7 +106,7 @@ describe('DialCodeComponent', () => {
     component.searchKeyword = '61U24C';
     item.data.metaData.mimeType = 'application/vnd.ekstep.content';
     component.getEvent(item);
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(route.navigate).toHaveBeenCalledWith(['play/content', item.data.metaData.identifier],
      { queryParams: { dialCode: '61U24C'}});
   });
@@ -137,7 +137,7 @@ describe('DialCodeComponent', () => {
     spyOn(utilService, 'getDataForCard').and.callThrough();
     component.searchDialCode();
     const searchResults = utilService.getDataForCard(Response.successData.result.content, constantData, dynamicFields, metaData);
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(utilService.getDataForCard).toHaveBeenCalled();
     expect(utilService.getDataForCard).toHaveBeenCalledWith(Response.successData.result.content, constantData, dynamicFields, metaData);
     expect(component.searchResults).toEqual([]);

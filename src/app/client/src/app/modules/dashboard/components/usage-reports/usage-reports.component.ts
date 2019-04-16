@@ -119,24 +119,22 @@ export class UsageReportsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit () {
-    setTimeout(() => {
-      this.telemetryImpression = {
-        context: {
-          env: this.activatedRoute.snapshot.data.telemetry.env
-        },
-        object: {
-          id: this.userService.userid,
-          type: 'user',
-          ver: '1.0'
-        },
-        edata: {
-          type: this.activatedRoute.snapshot.data.telemetry.type,
-          pageid: this.activatedRoute.snapshot.data.telemetry.pageid,
-          uri: this.router.url,
-          duration: this.navigationhelperService.getPageLoadTime()
-        }
-      };
-    });
+    this.telemetryImpression = {
+      context: {
+        env: this.activatedRoute.snapshot.data.telemetry.env
+      },
+      object: {
+        id: this.userService.userid,
+        type: 'user',
+        ver: '1.0'
+      },
+      edata: {
+        type: this.activatedRoute.snapshot.data.telemetry.type,
+        pageid: this.activatedRoute.snapshot.data.telemetry.pageid,
+        uri: this.router.url,
+        duration: this.navigationhelperService.getPageLoadTime()
+      }
+    };
   }
 
   downloadCSV(url) {

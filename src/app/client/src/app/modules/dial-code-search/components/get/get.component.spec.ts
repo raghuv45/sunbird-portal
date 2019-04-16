@@ -40,7 +40,7 @@ describe('GetComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GetComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.ngOnInit();
   });
 
   it('should create', () => {
@@ -50,7 +50,6 @@ describe('GetComponent', () => {
     const route = TestBed.get(Router);
     component.searchKeyword = 'test';
     component.navigateToSearch();
-    fixture.detectChanges();
     expect(route.navigate).toHaveBeenCalledWith(['/get/dial', component.searchKeyword]);
   });
 });

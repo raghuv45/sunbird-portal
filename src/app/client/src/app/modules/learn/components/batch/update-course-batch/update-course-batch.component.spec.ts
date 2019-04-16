@@ -87,7 +87,7 @@ describe('UpdateCourseBatchComponent', () => {
     spyOn(courseBatchService, 'getUpdateBatchDetails').and.returnValue(observableOf(updateBatchDetails));
     spyOn(courseConsumptionService, 'getCourseHierarchy').and.
     returnValue(observableOf({createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed'}));
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(component.participantList.length).toBe(9);
     expect(component.mentorList.length).toBe(1);
     expect(component.courseCreator).toBeDefined();
@@ -152,6 +152,7 @@ describe('UpdateCourseBatchComponent', () => {
     userService._userProfile = { organisationIds: [] };
     resourceService.messages = resourceServiceMockData.messages;
     resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
+    fixture.detectChanges();
     spyOn(courseBatchService, 'getUserList').and.callFake((request) => {
       if (request) {
         return observableOf(getUserDetails);
@@ -164,6 +165,7 @@ describe('UpdateCourseBatchComponent', () => {
     spyOn(toasterService, 'success');
     spyOn(courseConsumptionService, 'getCourseHierarchy').and.
     returnValue(observableOf({createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed'}));
+    component.ngOnInit();
     fixture.detectChanges();
     component.updateBatch();
     expect(toasterService.success).toHaveBeenCalledWith('success');
@@ -177,6 +179,7 @@ describe('UpdateCourseBatchComponent', () => {
     userService._userProfile = { organisationIds: [] };
     resourceService.messages = resourceServiceMockData.messages;
     resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
+    fixture.detectChanges();
     spyOn(courseBatchService, 'getUserList').and.callFake((request) => {
       if (request) {
         return observableOf(getUserDetails);
@@ -189,6 +192,7 @@ describe('UpdateCourseBatchComponent', () => {
     spyOn(toasterService, 'error');
     spyOn(courseConsumptionService, 'getCourseHierarchy').and.
     returnValue(observableOf({createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed'}));
+    component.ngOnInit();
     fixture.detectChanges();
     component.updateBatch();
     expect(toasterService.error).toHaveBeenCalledWith('error');

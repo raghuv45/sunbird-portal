@@ -41,7 +41,7 @@ export class GetComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit () {
-    setTimeout(() => {
+    // setTimeout(() => {
       this.telemetryImpression = {
         context: {
           env: this.activatedRoute.snapshot.data.telemetry.env
@@ -54,7 +54,7 @@ export class GetComponent implements OnInit, AfterViewInit {
           duration: this.navigationhelperService.getPageLoadTime()
         }
       };
-    });
+    // });
   }
 
   public navigateToSearch() {

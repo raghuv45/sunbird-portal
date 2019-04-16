@@ -429,25 +429,23 @@ export class OrganisationComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit () {
     const params = this.activatedRoute.snapshot.params;
-    setTimeout(() => {
-      this.telemetryImpression = {
-        context: {
-          env: this.activatedRoute.snapshot.data.telemetry.env
-        },
-        edata: {
-          uri: 'dashboard/organization/' + params.datasetType
-          + '/' + params.id + '/' + params.timePeriod,
-          type: this.activatedRoute.snapshot.data.telemetry.type,
-          pageid: this.activatedRoute.snapshot.data.telemetry.pageid,
-          duration: this.navigationhelperService.getPageLoadTime()
-        },
-        object: {
-          id: params.id,
-          type: 'org',
-          ver: '1.0'
-        }
-      };
-    });
+    this.telemetryImpression = {
+      context: {
+        env: this.activatedRoute.snapshot.data.telemetry.env
+      },
+      edata: {
+        uri: 'dashboard/organization/' + params.datasetType
+        + '/' + params.id + '/' + params.timePeriod,
+        type: this.activatedRoute.snapshot.data.telemetry.type,
+        pageid: this.activatedRoute.snapshot.data.telemetry.pageid,
+        duration: this.navigationhelperService.getPageLoadTime()
+      },
+      object: {
+        id: params.id,
+        type: 'org',
+        ver: '1.0'
+      }
+    };
   }
 
   ngOnDestroy() {

@@ -340,7 +340,7 @@ export class CreateBatchComponent implements OnInit, OnDestroy, AfterViewInit {
         });
   }
   ngAfterViewInit () {
-    setTimeout(() => {
+    // setTimeout(() => {
       this.telemetryImpression = {
         context: {
           env: this.activatedRoute.snapshot.data.telemetry.env
@@ -352,7 +352,7 @@ export class CreateBatchComponent implements OnInit, OnDestroy, AfterViewInit {
           duration: this.navigationhelperService.getPageLoadTime()
         }
       };
-    });
+    // });
   }
   ngOnDestroy() {
     if (this.createBatchModel && this.createBatchModel.deny) {

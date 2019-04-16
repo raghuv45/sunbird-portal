@@ -108,7 +108,7 @@ describe('CreateCourseBatchComponent', () => {
     spyOn(courseBatchService, 'createBatch').and.returnValue(observableOf(mockResponse.createBatchDetails));
     spyOn(toasterService, 'success').and.callThrough();
     toasterService.success(resourceServiceMockData.messages.smsg.m0033);
-    fixture.detectChanges();
+    component.ngOnInit();
     component.createBatchForm.value.startDate = new Date();
     component.createBatch();
     expect(component.createBatchForm).toBeDefined();
@@ -130,7 +130,7 @@ describe('CreateCourseBatchComponent', () => {
     spyOn(courseBatchService, 'createBatch').and.returnValue(observableThrowError({}));
     spyOn(toasterService, 'error').and.callThrough();
     toasterService.error(resourceServiceMockData.messages.fmsg.m0052);
-    fixture.detectChanges();
+    component.ngOnInit();
     component.createBatchForm.value.startDate = new Date();
     component.createBatch();
     expect(component.createBatchForm).toBeDefined();

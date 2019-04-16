@@ -304,19 +304,17 @@ export class CreateCourseBatchComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngAfterViewInit () {
-    setTimeout(() => {
-      this.telemetryImpression = {
-        context: {
-          env: this.activatedRoute.snapshot.data.telemetry.env
-        },
-        edata: {
-          type: this.activatedRoute.snapshot.data.telemetry.type,
-          pageid: this.activatedRoute.snapshot.data.telemetry.pageid,
-          uri: this.router.url,
-          duration: this.navigationhelperService.getPageLoadTime()
-        }
-      };
-    });
+    this.telemetryImpression = {
+      context: {
+        env: this.activatedRoute.snapshot.data.telemetry.env
+      },
+      edata: {
+        type: this.activatedRoute.snapshot.data.telemetry.type,
+        pageid: this.activatedRoute.snapshot.data.telemetry.pageid,
+        uri: this.router.url,
+        duration: this.navigationhelperService.getPageLoadTime()
+      }
+    };
   }
 
   /**

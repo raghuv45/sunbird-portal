@@ -358,7 +358,7 @@ export class MainHomeComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
   ngAfterViewInit () {
-    setTimeout(() => {
+    // setTimeout(() => {
       this.telemetryImpression = {
         context: {
           env: this.activatedRoute.snapshot.data.telemetry.env
@@ -371,6 +371,6 @@ export class MainHomeComponent implements OnInit, OnDestroy, AfterViewInit {
           duration: this.navigationhelperService.getPageLoadTime()
         }
       };
-    });
+    // });
   }
 }

@@ -224,7 +224,7 @@ export class DialCodeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.telemetryImpression = Object.assign({}, this.telemetryImpression);
   }
   ngAfterViewInit () {
-    setTimeout(() => {
+    // setTimeout(() => {
       this.telemetryImpression = {
         context: {
           env: this.activatedRoute.snapshot.data.telemetry.env,
@@ -246,7 +246,7 @@ export class DialCodeComponent implements OnInit, OnDestroy, AfterViewInit {
           duration: this.navigationhelperService.getPageLoadTime()
         }
       };
-    });
+    // });
   }
   ngOnDestroy() {
     this.unsubscribe$.next();

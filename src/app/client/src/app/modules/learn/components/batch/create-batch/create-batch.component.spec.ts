@@ -38,7 +38,7 @@ const resourceServiceMockData = {
     },
     lbl: {
       description: 'description',
-      createnewbatch: ''
+      createnewbatch: 'test'
     }
   }
 };
@@ -90,10 +90,7 @@ describe('CreateBatchComponent', () => {
     spyOn(courseBatchService, 'getUserList').and.returnValue(observableOf(getUserList));
     spyOn(courseConsumptionService, 'getCourseHierarchy').and.
     returnValue(observableOf({createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed'}));
-    const resourceService = TestBed.get(ResourceService);
-    resourceService.messages = resourceServiceMockData.messages;
-    resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(component.participantList.length).toBe(3);
     expect(component.mentorList.length).toBe(1);
     expect(component.mentorList[0].id).toBe('b2479136-8608-41c0-b3b1-283f38c338ed');
@@ -101,7 +98,39 @@ describe('CreateBatchComponent', () => {
     expect(component.createBatchForm).toBeDefined();
     expect(component.showCreateModal).toBeTruthy();
   });
-  it('should create batch and show success message if api return success', () => {
+  it('should create batch and show success message if api return success', fakeAsync(() => {
+    const courseBatchService = TestBed.get(CourseBatchService);
+    const courseConsumptionService = TestBed.get(CourseConsumptionService);
+    const toasterService = TestBed.get(ToasterService);
+    const userService = TestBed.get(UserService);
+    userService._userProfile = { organisationIds: [] };
+    fixture.detectChanges();
+    spyOn(courseBatchService, 'getUserList').and.returnValue(observableOf(getUserList));
+    spyOn(courseConsumptionService, 'getCourseHierarchy').and.
+    returnValue(observableOf({createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed'}));
+    spyOn(courseBatchService, 'createBatch').and.returnValue(observableOf(updateBatchDetails));
+    spyOn(toasterService, 'success');
+    // fixture.detectChanges();
+    // component.ngOnInit();
+    const resourceService = TestBed.get(ResourceService);
+    resourceService.messages = resourceServiceMockData.messages;
+    resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
+    fixture.detectChanges();
+    tick(1000);
+    component.createBatchForm.value.startDate = new Date();
+    fixture.detectChanges();
+    component.createBatch();
+    // fixture.detectChanges();
+    expect(component.createBatchForm).toBeDefined();
+    expect(component.showCreateModal).toBeTruthy();
+    expect(toasterService.success).toHaveBeenCalledWith('success');
+
+      // fixture.componentInstance.loadData(event);
+      // tick();
+      // fixture.detectChanges();
+      // expect(fixture.componentInstance.filterBy.length).toBe(10);
+  }));
+  xit('should create batch and show success message if api return success', () => {
     const courseBatchService = TestBed.get(CourseBatchService);
     const courseConsumptionService = TestBed.get(CourseConsumptionService);
     const toasterService = TestBed.get(ToasterService);
@@ -112,12 +141,15 @@ describe('CreateBatchComponent', () => {
     returnValue(observableOf({createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed'}));
     spyOn(courseBatchService, 'createBatch').and.returnValue(observableOf(updateBatchDetails));
     spyOn(toasterService, 'success');
+    // fixture.detectChanges();
+    // component.ngOnInit();
     const resourceService = TestBed.get(ResourceService);
     resourceService.messages = resourceServiceMockData.messages;
     resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
     fixture.detectChanges();
     component.createBatchForm.value.startDate = new Date();
     component.createBatch();
+    fixture.detectChanges();
     expect(component.createBatchForm).toBeDefined();
     expect(component.showCreateModal).toBeTruthy();
     expect(toasterService.success).toHaveBeenCalledWith('success');
@@ -133,12 +165,16 @@ describe('CreateBatchComponent', () => {
     returnValue(observableOf({createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed'}));
     spyOn(courseBatchService, 'createBatch').and.returnValue(observableThrowError(updateBatchDetails));
     spyOn(toasterService, 'error');
+    // fixture.detectChanges();
+    component.ngOnInit();
     const resourceService = TestBed.get(ResourceService);
     resourceService.messages = resourceServiceMockData.messages;
     resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
+    // component.ngOnInit();
     fixture.detectChanges();
     component.createBatchForm.value.startDate = new Date();
     component.createBatch();
+    fixture.detectChanges();
     expect(component.createBatchForm).toBeDefined();
     expect(component.showCreateModal).toBeTruthy();
     expect(toasterService.error).toHaveBeenCalledWith('error');

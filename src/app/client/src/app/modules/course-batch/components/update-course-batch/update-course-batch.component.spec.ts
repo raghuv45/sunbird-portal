@@ -80,7 +80,6 @@ describe('UpdateCourseBatchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UpdateCourseBatchComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
   it('should initialize the component expected calls for initializeUpdateForm and  fetchBatchDetails ', () => {
     const courseBatchService = TestBed.get(CourseBatchService);
@@ -89,6 +88,7 @@ describe('UpdateCourseBatchComponent', () => {
     resourceService.messages = resourceServiceMockData.messages;
     resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
     resourceService.messages = mockResponse.resourceBundle.messages;
+    fixture.detectChanges();
     const userService = TestBed.get(UserService);
     spyOn(courseBatchService, 'getCourseHierarchy').and.
       returnValue(observableOf({ createdBy: 'b2479136-8608-41c0-b3b1-283f38c338ed' }));
@@ -107,6 +107,7 @@ describe('UpdateCourseBatchComponent', () => {
     resourceService.messages = resourceServiceMockData.messages;
     resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
     resourceService.messages = mockResponse.resourceBundle.messages;
+    fixture.detectChanges();
     const userService = TestBed.get(UserService);
     userService._userProfile = { organisationIds: [] };
     spyOn(courseBatchService, 'getUserList').and.returnValue(observableOf(mockResponse.getUserList));
@@ -129,6 +130,7 @@ describe('UpdateCourseBatchComponent', () => {
     resourceService.messages = resourceServiceMockData.messages;
     resourceService.frmelmnts = resourceServiceMockData.frmelmnts;
     resourceService.messages = mockResponse.resourceBundle.messages;
+    fixture.detectChanges();
     const userService = TestBed.get(UserService);
     userService._userProfile = { organisationIds: [] };
     spyOn(courseBatchService, 'getUserList').and.returnValue(observableOf(mockResponse.getUserList));

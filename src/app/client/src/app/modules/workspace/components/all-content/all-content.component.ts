@@ -346,7 +346,7 @@ export class AllContentComponent extends WorkSpace implements OnInit, AfterViewI
     this.telemetryImpression = {
       context: {
         env: this.activatedRoute.snapshot.data.telemetry.env
-      },
+                                        },
       edata: {
         type: this.activatedRoute.snapshot.data.telemetry.type,
         pageid: this.activatedRoute.snapshot.data.telemetry.pageid,
